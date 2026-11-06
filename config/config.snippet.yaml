@@ -1,0 +1,33 @@
+# 最小配置片段示例（不是完整 config.yaml）
+# 把需要的段落合并进你本机的 Hermes config.yaml
+# 所有真实 ID / 密钥用占位符或环境变量，不要写进公开仓库
+
+# 并发时后到的消息排队成独立一轮，避免群里「答 A @ B」
+display:
+  busy_input_mode: queue
+
+# 群共享会话（全局；飞书群也会受影响）
+group_sessions_per_user: false
+
+# guest profile 工具白名单示例（写在 profiles/guest-qq/config.yaml）
+platform_toolsets:
+  qqbot:
+    - web
+    - vision
+    - clarify
+    - tts
+  # 故意不给：terminal / file / code_execution / browser / memory / cronjob …
+
+gateway:
+  profile_routes:
+    - name: qq-owner-default
+      platform: qqbot
+      user_id: "<YOUR_QQ_OWNER_OPENID>"
+      profile: default
+    - name: qq-group-universal-guest
+      platform: qqbot
+      chat_id: "<YOUR_QQ_GROUP_ID>"
+      profile: guest-qq
+    - name: qq-others-guest
+      platform: qqbot
+      profile: guest-qq

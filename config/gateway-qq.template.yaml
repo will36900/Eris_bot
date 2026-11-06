@@ -1,0 +1,54 @@
+# QQ(QQBot) 平台接入模板 —— 无真实凭据
+#
+# 用法：
+# 1. 把 platforms 段写进主 config.yaml，以及 profiles/guest-qq/config.yaml
+# 2. 把下方注释里的 profile_routes 粘到 gateway.profile_routes 列表
+# 3. 所有 <PLACEHOLDER> 换成你自己的值；真实值只放本机，不要提交公开仓库
+#
+# 配套改动（不在本文件里）：
+# - 主 config 顶层 group_sessions_per_user: false（全局生效，飞书群也会共享会话）
+# - guest profile 的 platform_toolsets.qqbot 做成白名单（见 docs/03-qq.md）
+# - .env 补 QQ_APP_ID / QQ_CLIENT_SECRET / QQ_OWNER_OPENID / QQ_GROUP_ID
+# - 所有 profile 的 display.busy_input_mode: queue
+#   （默认 interrupt 会让群里「答的是 A，@ 的却是 B」）
+
+platforms:
+  qqbot:
+    extra:
+      # 陌生人可以私聊闲聊；真正边界在 guest 的工具白名单
+      dm_policy: "open"
+      group_policy: "open"
+
+      # 关掉按人拆会话：全群共用一条 session
+      # runner 层读主 config 顶层；adapter 层读这里 —— 两处必须一致
+      group_sessions_per_user: false
+
+      # slash 命令白名单。列表非空才启用 gating。
+      # 值必须是 adapter 报上来的 source.user_id（QQ 群是 member_openid）
+      group_allow_admin_from: ["<YOUR_QQ_OWNER_OPENID>"]
+
+      # QQ 群事件只带 member_openid，没有昵称。
+      # 没有这张表，共享会话里每条消息都不带主语，模型分不清谁在说话。
+      # 表里没有的成员会退化成 openid 前 8 位。
+      # 注意：dict 的 key 不能用 ${VAR} 插值，只能写字面量。
+      group_member_names:
+        "<YOUR_QQ_OWNER_OPENID>": "<群里对你的叫法>"
+        "<MEMBER_1_OPENID>": "<成员1昵称>"
+        "<MEMBER_2_OPENID>": "<成员2昵称>"
+
+# ── gateway.profile_routes（粘到主 config.yaml 的 gateway.profile_routes 列表）──
+#
+#   - name: qq-owner-default
+#     platform: qqbot
+#     user_id: "<YOUR_QQ_OWNER_OPENID>"
+#     profile: default
+#   - name: qq-group-universal-guest
+#     platform: qqbot
+#     chat_id: "<YOUR_QQ_GROUP_ID>"
+#     profile: guest-qq
+#   - name: qq-others-guest
+#     platform: qqbot
+#     profile: guest-qq
+#
+# specificity：user_id=16 > chat_id=4，最具体者胜。
+# 私聊的 user_openid 和群里的 member_openid 格式可能不同，按日志里实际打印的填。

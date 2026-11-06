@@ -1,0 +1,43 @@
+#!/usr/bin/env bash
+# 提交前检查。用 git config core.hooksPath hooks 激活。
+# 跳过：git commit --no-verify
+set -uo pipefail
+
+ROOT=$(git rev-parse --show-toplevel 2>/dev/null) || exit 0
+cd "$ROOT" || exit 0
+
+red()   { printf '\033[31m%s\033[0m\n' "$*"; }
+green() { printf '\033[32m%s\033[0m\n' "$*"; }
+yellow(){ printf '\033[33m%s\033[0m\n' "$*"; }
+
+fail=0
+
+# 1) 敏感文件不能进暂存区（.gitignore 挡不住 git add -f）
+secret_hits=$(git diff --cached --name-only --diff-filter=ACM \
+  | grep -Ei '(^|/)\.env($|\.)|(^|/)auth\.json$|credential|\.pem$|\.key$|(^|/)install_id$' \
+  | grep -vE '\.(template|example)$' || true)
+
+if [ -n "$secret_hits" ]; then
+  red "✗ 暂存区里有敏感文件，拒绝提交："
+  printf '    %s\n' $secret_hits
+  yellow "  确认要提交：git commit --no-verify"
+  fail=1
+fi
+
+# 2) 暂存区内容的密钥扫描
+if [ -f scripts/check_secrets.py ]; then
+  if ! out=$(python3 scripts/check_secrets.py 2>&1); then
+    red "✗ 暂存区内容里发现疑似密钥："
+    printf '%s\n' "$out" | sed 's/^/    /'
+    yellow "  确认是占位符/标识符：git commit --no-verify"
+    fail=1
+  fi
+fi
+
+if [ "$fail" -ne 0 ]; then
+  red "提交已拦截。修好再提交，或 git commit --no-verify 强行跳过。"
+  exit 1
+fi
+
+green "✓ pre-commit 检查通过"
+exit 0
