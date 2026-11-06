@@ -23,6 +23,7 @@
 |---|---|
 | 群聊人格 | 精简版 Eris 示例 + 最小人格模板 |
 | QQ 接入 | 路由、共享群记忆、slash 白名单、工具白名单 |
+| 群历史 | 只读 `group_history` 插件：chat_id 取自运行时，不放开 `session_search` |
 | 飞书接入 | 同样的权限拆分思路 |
 | 表情包 | 公网直链库存 + CDN 节点坑 + 提示词写法 |
 | 防泄露 | `pre-commit` + 内容级密钥扫描脚本 |
@@ -71,8 +72,10 @@ Eris_bot/
 │   ├── souls/
 │   │   ├── minimal.SOUL.md
 │   │   └── eris-qq.SOUL.md
-│   └── memory/
-│       └── guest-qq.MEMORY.example.md
+│   ├── memory/
+│   │   └── guest-qq.MEMORY.example.md
+│   └── plugins/
+│       └── group-history/   # 只读群聊历史工具（见 docs/03-qq.md）
 ├── hooks/pre-commit
 └── scripts/check_secrets.py
 ```

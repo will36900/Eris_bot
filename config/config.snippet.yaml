@@ -12,11 +12,23 @@ group_sessions_per_user: false
 # guest profile 工具白名单示例（写在 profiles/guest-qq/config.yaml）
 platform_toolsets:
   qqbot:
-    - web
-    - vision
-    - clarify
-    - tts
+    - web           # web_search, web_extract
+    - vision        # vision_analyze
+    - clarify       # 追问
+    - tts           # text_to_speech
+    - group_history # 只读群聊历史（chat_id 取自运行时，见 docs/03-qq.md）
   # 故意不给：terminal / file / code_execution / browser / memory / cronjob …
+
+# 启用插件（需要先把插件文件拷贝到 ~/.hermes/profiles/guest-qq/plugins/）
+plugins:
+  enabled:
+    - group-history
+
+# 插件工具默认被延迟到 tool_search/tool_describe/tool_call 后面，模型要先搜索
+# 才能发现。guest-qq 只开了少量工具，全部急切加载，关闭延迟机制。
+tools:
+  tool_search:
+    enabled: "off"
 
 gateway:
   profile_routes:

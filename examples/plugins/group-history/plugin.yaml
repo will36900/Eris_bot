@@ -1,0 +1,6 @@
+name: group-history
+version: 1.0.0
+description: "Read-only history lookup for the current QQ group only. chat_id comes from the runtime session, never from model arguments."
+author: Eris
+provides_tools:
+  - group_history
