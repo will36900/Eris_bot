@@ -2,6 +2,11 @@
 
 基于 [Hermes Agent](https://github.com/NousResearch/hermes-agent) 的 QQ / 飞书群聊机器人**配置教程与模板**。
 
+写法上同时参考了：
+
+- [Mikasa](https://github.com/Ceng-0324/MIKASA) — 同样站在 Hermes 之上，偏身份、工程协作与真实仓库接入
+- [AstrBot](https://github.com/AstrBotDevs/AstrBot) — 多平台 IM / 插件生态；本仓库的表情包气氛发送、群历史拆法等思路有对照其实现
+
 本仓库教你三件事：
 
 1. 怎么写 `SOUL.md`（人格）
@@ -136,6 +141,16 @@ AstrBot 的长期记忆（LTM）把「会话共享」和「消息池」拆成两
 - 运行时依赖上游 Hermes Agent，本仓库不 vendor 其源码
 - 配置项名称以你安装的 Hermes 版本为准；本教程描述的是经过验证的接入方式
 - 若上游字段更名，以 Hermes 文档为准，欢迎开 issue 同步教程
+
+## 相关项目
+
+| 项目 | 链接 | 和本仓库的关系 |
+|---|---|---|
+| Hermes Agent | https://github.com/NousResearch/hermes-agent | 运行时与工具层 |
+| Mikasa | https://github.com/Ceng-0324/MIKASA | 设计参考：Hermes 上的身份 / 工程协作封装 |
+| AstrBot | https://github.com/AstrBotDevs/AstrBot | 设计参考：多平台 bot、表情包与群历史等能力对照 |
+
+本仓库是教程与脱敏模板，不是对上述项目的 fork。
 
 ## 许可证
 
