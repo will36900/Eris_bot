@@ -46,6 +46,7 @@ cp config/.env.example ~/.hermes/.env   # 然后填真实值
 | [快速开始](docs/01-quickstart.md) | 装好 Hermes 之后怎么用本仓库 |
 | [SOUL 指南](docs/02-soul-guide.md) | 人格怎么写、怎么生效、常见坑 |
 | [QQ 接入](docs/03-qq.md) | 路由、openid、白名单、验证清单 |
+| [Hermes 更新与 QQ 补丁](docs/06-hermes-update.md) | v0.23.0 补丁、升级和验证 |
 | [飞书接入](docs/04-feishu.md) | 应用创建与权限模型 |
 | [表情包系统](docs/05-stickers.md) | 库存优先 + CDN + 复用步骤 |
 | [安全约定](SECURITY.md) | 占位符规范与漏洞反馈 |
